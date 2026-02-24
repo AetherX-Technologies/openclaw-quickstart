@@ -67,7 +67,7 @@ ${defs}
  * We format the messages into a readable format that preserves context.
  */
 // Tools that spawn subagents/Claude Code — strip them so the LLM must handle requests directly
-const BLOCKED_TOOLS = new Set(['exec', 'subagents', 'session_status', 'sessions_spawn']);
+const BLOCKED_TOOLS = new Set(['subagents', 'session_status', 'sessions_spawn']);
 
 export function messagesToPrompt(messages, tools) {
     const parts = [];

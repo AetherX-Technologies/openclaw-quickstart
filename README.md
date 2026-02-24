@@ -1,56 +1,58 @@
-# OpenClaw 快速上手指南
+# OpenClaw Quickstart Guide
 
-> 用 Claude Max 订阅驱动 OpenClaw，通过 Telegram 控制你的电脑、浏览器和文件。
+> Control your Mac, browser, and files through Telegram — powered by your Claude Max subscription.
 
----
-
-## 这是什么？
-
-- **OpenClaw**：一个 AI 网关，让你通过 Telegram 等聊天工具和 AI agent 对话，agent 可以帮你操作电脑
-- **claude-max-api-proxy**：把 Claude CLI（命令行工具）包装成标准 API，让 OpenClaw 能调用它
-- **本仓库**：记录了让两者配合工作所需的所有配置和代码改动
+**[中文教程 →](README.zh.md)**
 
 ---
 
-## 前置条件
+## What is this?
 
-开始之前，确认你有：
-
-- [ ] macOS 电脑
-- [ ] [Claude Max 订阅](https://claude.ai)（需要能在终端用 `claude` 命令）
-- [ ] Node.js 18+（推荐用 [nvm](https://github.com/nvm-sh/nvm) 安装）
-- [ ] Telegram 账号 + 一个 Bot Token（从 [@BotFather](https://t.me/BotFather) 获取）
-- [ ] Google Chrome 浏览器（浏览器控制功能需要）
+- **OpenClaw**: An AI gateway that lets you chat with an AI agent via Telegram. The agent can operate your computer on your behalf.
+- **claude-max-api-proxy**: Wraps the Claude CLI into a standard OpenAI-compatible API so OpenClaw can call it.
+- **This repo**: Contains all the config files and code patches needed to make the two work together.
 
 ---
 
-## 第一步：安装 Claude CLI
+## Prerequisites
 
-如果还没安装，先安装 Claude Code CLI：
+Before you start, make sure you have:
+
+- [ ] A Mac (macOS)
+- [ ] A [Claude Max subscription](https://claude.ai) with the `claude` CLI working in your terminal
+- [ ] Node.js 18+ (recommended: install via [nvm](https://github.com/nvm-sh/nvm))
+- [ ] A Telegram account + a Bot Token (get one from [@BotFather](https://t.me/BotFather))
+- [ ] Google Chrome (required for browser control)
+
+---
+
+## Step 1: Install Claude CLI
+
+If you haven't already, install Claude Code CLI:
 
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
 
-安装完后验证：
+Verify it works:
 
 ```bash
 claude --version
 ```
 
-然后登录你的 Claude Max 账号：
+Then log in with your Claude Max account:
 
 ```bash
 claude
 ```
 
-按提示完成授权，退出后继续。
+Follow the prompts to authorize, then exit.
 
 ---
 
-## 第二步：安装 claude-max-api-proxy
+## Step 2: Install claude-max-api-proxy
 
-这个工具把 Claude CLI 变成一个本地 API 服务（监听 3456 端口）。
+This tool wraps the Claude CLI as a local API server on port 3456.
 
 ```bash
 npm install -g claude-max-api-proxy
@@ -58,13 +60,13 @@ npm install -g claude-max-api-proxy
 
 ---
 
-## 第三步：安装 OpenClaw
+## Step 3: Install OpenClaw
 
 ```bash
 npm install -g openclaw
 ```
 
-验证安装：
+Verify:
 
 ```bash
 openclaw --version
@@ -72,57 +74,51 @@ openclaw --version
 
 ---
 
-## 第四步：应用本仓库的配置
+## Step 4: Apply the patches from this repo
 
-克隆本仓库：
+Clone this repo:
 
 ```bash
 git clone https://github.com/AetherX-Technologies/openclaw-quickstart.git
 cd openclaw-quickstart
 ```
 
-### 4.1 替换 proxy 的核心文件
+### 4.1 Replace the proxy core files
 
-本仓库对 `claude-max-api-proxy` 做了三处关键修复，需要覆盖原始文件：
+This repo includes three patched files that fix critical bugs in the original proxy. Copy them over:
 
 ```bash
-# 找到 proxy 的安装路径
 PROXY=$(npm root -g)/claude-max-api-proxy
 
-# 覆盖改动的文件
 cp claude-max-api-proxy/dist/adapter/openai-to-cli.js $PROXY/dist/adapter/
 cp claude-max-api-proxy/dist/adapter/cli-to-openai.js $PROXY/dist/adapter/
 cp claude-max-api-proxy/dist/server/routes.js $PROXY/dist/server/
 ```
 
-> **为什么要改这些文件？**
-> 原版 proxy 有几个 bug：消息内容显示 `[object Object]`、无法处理工具调用、会错误地启动 Claude Code 子进程来处理浏览器任务。这些改动修复了上述问题。
+> **Why patch these files?**
+> The original proxy has several bugs: message content renders as `[object Object]`, tool calls don't work, and it incorrectly spawns a Claude Code subprocess for browser tasks. These patches fix all of that.
 
-### 4.2 配置 OpenClaw
+### 4.2 Copy OpenClaw config
 
 ```bash
-# 创建配置目录
 mkdir -p ~/.openclaw/agents/main/agent
 
-# 复制主配置（包含模型、Telegram、网关设置）
 cp openclaw-config/openclaw.json ~/.openclaw/
-
-# 复制 agent 指令（告诉 agent 直接用浏览器工具，不要启动子进程）
 cp openclaw-config/agents/main/agent/AGENT.md ~/.openclaw/agents/main/agent/
 ```
 
-### 4.3 配置 Telegram Bot Token
+### 4.3 Set your Telegram Bot Token
 
-编辑 `~/.openclaw/openclaw.json`，找到这一行，替换成你自己的 Bot Token：
+Edit `~/.openclaw/openclaw.json` and replace the placeholder with your own Bot Token:
 
 ```json
-"botToken": "在这里填入你的 Bot Token"
+"botToken": "your-bot-token-here"
 ```
 
-> Bot Token 格式类似：`1234567890:ABCdefGHIjklMNOpqrSTUvwxYZ`
-> 从 Telegram 的 [@BotFather](https://t.me/BotFather) 发送 `/newbot` 获取。
+> Your token looks like: `1234567890:ABCdefGHIjklMNOpqrSTUvwxYZ`
+> Get one by sending `/newbot` to [@BotFather](https://t.me/BotFather) on Telegram.
 
-### 4.4 复制启动脚本
+### 4.4 Copy the startup script
 
 ```bash
 cp start-openclaw.sh ~/start-openclaw.sh
@@ -131,18 +127,18 @@ chmod +x ~/start-openclaw.sh
 
 ---
 
-## 第五步：启动所有服务
+## Step 5: Start all services
 
 ```bash
 ~/start-openclaw.sh
 ```
 
-脚本会依次启动：
-1. `claude-max-api-proxy`（端口 3456，后台运行）
-2. OpenClaw 网关（端口 18789，注册为系统服务，开机自启）
-3. 浏览器中继服务（端口 18792，供 Chrome 扩展连接）
+This script starts:
+1. `claude-max-api-proxy` on port 3456 (background process)
+2. OpenClaw gateway on port 18789 (registered as a system LaunchAgent — auto-starts on boot)
+3. Browser relay on port 18792 (for the Chrome extension)
 
-启动成功后会显示：
+On success you'll see:
 
 ```
 Starting claude-max-api proxy on :3456...
@@ -159,72 +155,72 @@ Chrome: click OpenClaw Browser Relay extension icon on any tab to attach.
 
 ---
 
-## 第六步：连接 Telegram
+## Step 6: Pair with Telegram
 
-1. 打开 Telegram，找到你的 Bot（就是你在 BotFather 创建的那个）
-2. 发送 `/start`
-3. 发送 `/pair`，Bot 会回复一个配对码，例如 `233TR3Z4`
-4. 在终端运行：
+1. Open Telegram and find your bot
+2. Send `/start`
+3. Send `/pair` — the bot will reply with a pairing code like `233TR3Z4`
+4. In your terminal, run:
 
 ```bash
 openclaw pairing approve 233TR3Z4
 ```
 
-配对成功后，直接在 Telegram 给 Bot 发消息就能和 agent 对话了。
+Once paired, just message your bot and the agent will respond.
 
 ---
 
-## 第七步：安装 Chrome 扩展（可选，浏览器控制需要）
+## Step 7: Install the Chrome extension (optional, for browser control)
 
-让 agent 能控制你的 Chrome 浏览器（截图、点击、导航等）。
+This lets the agent control your Chrome browser — take screenshots, click, navigate, etc.
 
-### 7.1 安装扩展
+### 7.1 Install the extension files
 
 ```bash
 openclaw browser extension install
 ```
 
-然后在 Chrome 中：
-1. 地址栏输入 `chrome://extensions`
-2. 右上角开启**开发者模式**
-3. 点击**加载已解压的扩展程序**
-4. 按 `Cmd+Shift+G`，粘贴路径：`/Users/你的用户名/.openclaw/browser/chrome-extension`
-5. 点击打开
+Then in Chrome:
+1. Go to `chrome://extensions`
+2. Enable **Developer mode** (top right toggle)
+3. Click **Load unpacked**
+4. Press `Cmd+Shift+G` and paste: `/Users/YOUR_USERNAME/.openclaw/browser/chrome-extension`
+5. Click Open
 
-### 7.2 配置扩展
+### 7.2 Configure the extension
 
-1. 右键扩展图标 → **选项**
-2. 填入 Gateway Token（从启动脚本输出中复制，或运行 `openclaw config get gateway.auth.token`）
-3. 点 **Save**
+1. Right-click the extension icon → **Options**
+2. Enter your Gateway Token (shown in the startup script output, or run `openclaw config get gateway.auth.token`)
+3. Click **Save**
 
-### 7.3 连接标签页
+### 7.3 Attach to a tab
 
-在 Chrome 里打开任意网页，点击工具栏中的 **OpenClaw Browser Relay** 图标，图标变色即表示连接成功。
+Open any webpage in Chrome, then click the **OpenClaw Browser Relay** icon in the toolbar. When the icon changes color, it's connected.
 
 ---
 
-## 日常使用
+## Daily usage
 
-### 启动服务
+### Starting services
 
-每次重启电脑后，OpenClaw 网关会**自动启动**（系统服务）。
-但 `claude-max-api-proxy` 需要手动启动：
+After a reboot, the OpenClaw gateway starts **automatically** (it's a system service).
+You only need to manually start the proxy:
 
 ```bash
 ~/start-openclaw.sh
 ```
 
-### 查看日志
+### Viewing logs
 
 ```bash
-# proxy 日志
+# Proxy logs
 tail -f ~/claude-proxy.log
 
-# OpenClaw 网关日志
+# Gateway logs
 tail -f ~/.openclaw/logs/gateway.log
 ```
 
-### 检查服务状态
+### Health check
 
 ```bash
 openclaw health
@@ -232,36 +228,37 @@ openclaw health
 
 ---
 
-## 常见问题
+## Troubleshooting
 
-**Q：Telegram 收到的回复显示 `[object Object]`**
-A：proxy 文件没有正确替换，重新执行第 4.1 步。
+**Telegram replies show `[object Object]`**
+The proxy files weren't patched correctly. Redo step 4.1.
 
-**Q：agent 说"没有 browser 工具"**
-A：Chrome 扩展没有连接到标签页，点击扩展图标 attach 到当前标签页。
+**Agent says "no browser tool available"**
+The Chrome extension isn't attached to a tab. Click the extension icon on the tab you want to control.
 
-**Q：发消息没有回复**
-A：运行 `openclaw health` 检查状态，或查看 `~/claude-proxy.log` 排查错误。
+**No reply from the bot**
+Run `openclaw health` to check service status, or check `~/claude-proxy.log` for errors.
 
-**Q：proxy 启动失败，提示 CLAUDECODE 错误**
-A：不要在 Claude Code 终端里直接运行 proxy，用 `~/start-openclaw.sh` 启动（脚本会自动处理这个问题）。
+**Proxy fails with a CLAUDECODE error**
+Don't run the proxy directly inside a Claude Code terminal session. Always use `~/start-openclaw.sh` — it handles this automatically.
 
 ---
 
-## 仓库结构
+## Repo structure
 
 ```
-├── claude-max-api-proxy/          # proxy 完整项目（含改动）
+├── claude-max-api-proxy/          # Full proxy project with patches
 │   └── dist/
 │       ├── adapter/
-│       │   ├── openai-to-cli.js   # 修复内容序列化 + 工具注入 + 过滤子进程工具
-│       │   └── cli-to-openai.js   # 解析 XML tool_call → OpenAI 格式
+│       │   ├── openai-to-cli.js   # Fixes content serialization, tool injection, blocks subprocess tools
+│       │   └── cli-to-openai.js   # Parses XML tool_call → OpenAI format
 │       └── server/
-│           └── routes.js          # debug 日志 + 流式响应修复
+│           └── routes.js          # Debug logging + streaming fix
 ├── openclaw-config/
-│   ├── openclaw.json              # OpenClaw 主配置
+│   ├── openclaw.json              # Main OpenClaw config
 │   └── agents/main/agent/
-│       └── AGENT.md               # Agent 行为指令
-├── start-openclaw.sh              # 一键启动脚本
-└── README.md                      # 本文档
+│       └── AGENT.md               # Agent behavior instructions
+├── start-openclaw.sh              # One-command startup script
+├── README.md                      # This file (English)
+└── README.zh.md                   # Chinese guide
 ```

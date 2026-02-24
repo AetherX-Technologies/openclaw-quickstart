@@ -1,0 +1,104 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.2.23",
+    "lastTouchedAt": "2026-02-24T09:19:51.542Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-02-24T07:43:20.823Z",
+    "lastRunVersion": "2026.2.23",
+    "lastRunCommand": "onboard",
+    "lastRunMode": "local"
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "custom-localhost-3456": {
+        "baseUrl": "http://localhost:3456/v1",
+        "apiKey": "not-needed",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "claude-sonnet-4",
+            "name": "claude-sonnet-4 (Custom Provider)",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 16000
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "custom-localhost-3456/claude-sonnet-4"
+      },
+      "models": {
+        "custom-localhost-3456/claude-sonnet-4": {}
+      },
+      "workspace": "/Users/blueice",
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      }
+    }
+  },
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw"
+  },
+  "session": {
+    "dmScope": "per-channel-peer"
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "dmPolicy": "pairing",
+      "botToken": "8610821225:AAENLBQBqkBzoA0eFyd6AjuuZWv38qHnbiE",
+      "groupPolicy": "allowlist",
+      "streaming": "off"
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
+    "auth": {
+      "mode": "token",
+      "token": "e86a1284bb278eae5c2a6a1dede3587e175ce12057b02d42"
+    },
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    }
+  },
+  "skills": {
+    "install": {
+      "nodeManager": "npm"
+    }
+  },
+  "plugins": {
+    "entries": {
+      "telegram": {
+        "enabled": true
+      }
+    }
+  }
+}

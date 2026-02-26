@@ -148,7 +148,7 @@
     "telegram": {
       "enabled": true,
       "dmPolicy": "pairing",
-      "botToken": "8610821225:AAENLBQBqkBzoA0eFyd6AjuuZWv38qHnbiE",
+      "botToken": "YOUR_BOT_TOKEN_HERE",
       "groupPolicy": "allowlist",
       "streaming": "off",
       "groups": {

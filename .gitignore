@@ -1,3 +1,14 @@
 node_modules/
 *.log
 .DS_Store
+
+# Credentials & secrets
+.env
+.env.*
+credentials.json
+*.key
+*.pem
+secrets/
+
+# Real openclaw config (contains bot token) — commit only the placeholder version
+openclaw-config/openclaw.json.local

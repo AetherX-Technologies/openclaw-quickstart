@@ -11,31 +11,60 @@ metadata: { "openclaw": { "emoji": "🤖", "requires": { "bins": ["claude"] } } 
 
 Delegate coding tasks to Claude Code CLI using the `exec` tool.
 
-## How to use
-
-Call exec with this exact pattern:
+## Core pattern
 
 ```
-exec command:"env -u CLAUDECODE claude -p '<instruction>' --dangerously-skip-permissions" cwd:"<project_dir>" timeoutMs:300000
+exec command:"env -u CLAUDECODE claude -p '<instruction>' --permission-mode bypassPermissions" cwd:"<project_dir>" timeoutMs:300000
 ```
 
-- Replace `<instruction>` with a clear natural language task description
-- Replace `<project_dir>` with the target project directory (default: /Users/blueice)
-- `timeoutMs:300000` = 5 minute timeout for complex tasks
+- `env -u CLAUDECODE` — required, prevents nested session errors
+- `--permission-mode bypassPermissions` — auto-approves all tool use
+- `timeoutMs:300000` — 5 min default; use 120000 for quick tasks
 
-## Example
+## Permission modes
 
-User: "重构 login.js，把验证逻辑抽离出来"
+| Mode | When to use |
+|------|-------------|
+| `bypassPermissions` | Default — auto-approves everything |
+| `acceptEdits` | Auto-approves file edits, asks for Bash |
+| `plan` | Read-only analysis, no writes |
+
+## Useful flags
 
 ```
-exec command:"env -u CLAUDECODE claude -p 'Refactor login.js: extract validation logic into a separate validateUser() function' --dangerously-skip-permissions" cwd:"/Users/blueice/myproject" timeoutMs:300000
+--allowedTools "Bash,Read,Edit,Write"   # least-privilege (skip bypassPermissions)
+--output-format json                    # structured output
+--append-system-prompt "Be strict."     # extra instructions
 ```
+
+## Examples
+
+**Refactor:**
+```
+exec command:"env -u CLAUDECODE claude -p 'Refactor login.js: extract validation into validateUser()' --permission-mode bypassPermissions" cwd:"/Users/blueice/myproject" timeoutMs:300000
+```
+
+**Read-only analysis:**
+```
+exec command:"env -u CLAUDECODE claude -p 'Analyze this repo and summarize the architecture' --permission-mode plan" cwd:"/Users/blueice/myproject" timeoutMs:120000
+```
+
+**Least-privilege (safer for untrusted code):**
+```
+exec command:"env -u CLAUDECODE claude -p 'Run tests and fix failures' --allowedTools 'Bash,Read,Edit'" cwd:"/Users/blueice/myproject" timeoutMs:300000
+```
+
+## Tips for better results
+
+- **Give Claude a way to verify**: end prompts with "Done when `npm test` passes" or "take a screenshot to confirm"
+- **Plan first for complex tasks**: use `--permission-mode plan` to explore, then re-run with `bypassPermissions` to implement
+- **After fixing Claude's mistakes**: append "Update CLAUDE.md so you don't repeat this mistake" to the prompt
+- **Pass instructions in English** for best results
 
 ## Rules
 
-- Always use `env -u CLAUDECODE` prefix — required to avoid nested session errors
-- Always set `timeoutMs` to at least 120000 (2 min) for non-trivial tasks
-- Pass the instruction in English for best results
+- Always use `env -u CLAUDECODE` prefix
+- Always set `timeoutMs` (min 120000 for non-trivial tasks)
 - After exec returns, summarize the result to the user
-- Do NOT use this for browser/web tasks — use the `browser` tool directly
+- Do NOT use for browser/web tasks — use `browser` tool directly
 - Do NOT run `claude` without `-p` (no interactive sessions)

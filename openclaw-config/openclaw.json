@@ -108,30 +108,30 @@
           "emoji": "💻"
         }
       }
-    ],
-    "bindings": [
-      {
-        "agentId": "deep-think",
-        "match": {
-          "channel": "telegram",
-          "peer": {
-            "kind": "group",
-            "id": "REPLACE_WITH_DEEP_THINK_GROUP_ID"
-          }
-        }
-      },
-      {
-        "agentId": "coder",
-        "match": {
-          "channel": "telegram",
-          "peer": {
-            "kind": "group",
-            "id": "REPLACE_WITH_CODER_GROUP_ID"
-          }
-        }
-      }
     ]
   },
+  "bindings": [
+    {
+      "agentId": "deep-think",
+      "match": {
+        "channel": "telegram",
+        "peer": {
+          "kind": "group",
+          "id": "-5277618506"
+        }
+      }
+    },
+    {
+      "agentId": "coder",
+      "match": {
+        "channel": "telegram",
+        "peer": {
+          "kind": "group",
+          "id": "-5117536289"
+        }
+      }
+    }
+  ],
   "messages": {
     "ackReactionScope": "group-mentions"
   },
@@ -150,7 +150,17 @@
       "dmPolicy": "pairing",
       "botToken": "8610821225:AAENLBQBqkBzoA0eFyd6AjuuZWv38qHnbiE",
       "groupPolicy": "allowlist",
-      "streaming": "off"
+      "streaming": "off",
+      "groups": {
+        "-5277618506": {
+          "enabled": true,
+          "requireMention": false
+        },
+        "-5117536289": {
+          "enabled": true,
+          "requireMention": false
+        }
+      }
     }
   },
   "gateway": {

@@ -32,6 +32,22 @@
             },
             "contextWindow": 200000,
             "maxTokens": 16000
+          },
+          {
+            "id": "claude-opus-4",
+            "name": "claude-opus-4 (Custom Provider)",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": 16000
           }
         ]
       }
@@ -43,7 +59,8 @@
         "primary": "custom-localhost-3456/claude-sonnet-4"
       },
       "models": {
-        "custom-localhost-3456/claude-sonnet-4": {}
+        "custom-localhost-3456/claude-sonnet-4": {},
+        "custom-localhost-3456/claude-opus-4": {}
       },
       "workspace": "/Users/blueice",
       "compaction": {
@@ -53,7 +70,67 @@
       "subagents": {
         "maxConcurrent": 8
       }
-    }
+    },
+    "list": [
+      {
+        "id": "main",
+        "name": "Main Assistant",
+        "workspace": "/Users/blueice",
+        "model": {
+          "primary": "custom-localhost-3456/claude-sonnet-4"
+        },
+        "identity": {
+          "name": "Assistant",
+          "emoji": "🦞"
+        }
+      },
+      {
+        "id": "deep-think",
+        "name": "Deep Think Agent",
+        "workspace": "/Users/blueice",
+        "model": {
+          "primary": "custom-localhost-3456/claude-opus-4"
+        },
+        "identity": {
+          "name": "DeepThink",
+          "emoji": "🧠"
+        }
+      },
+      {
+        "id": "coder",
+        "name": "Coder Agent",
+        "workspace": "/Users/blueice",
+        "model": {
+          "primary": "custom-localhost-3456/claude-sonnet-4"
+        },
+        "identity": {
+          "name": "Coder",
+          "emoji": "💻"
+        }
+      }
+    ],
+    "bindings": [
+      {
+        "agentId": "deep-think",
+        "match": {
+          "channel": "telegram",
+          "peer": {
+            "kind": "group",
+            "id": "REPLACE_WITH_DEEP_THINK_GROUP_ID"
+          }
+        }
+      },
+      {
+        "agentId": "coder",
+        "match": {
+          "channel": "telegram",
+          "peer": {
+            "kind": "group",
+            "id": "REPLACE_WITH_CODER_GROUP_ID"
+          }
+        }
+      }
+    ]
   },
   "messages": {
     "ackReactionScope": "group-mentions"

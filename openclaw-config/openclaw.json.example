@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.2.23"
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "custom-localhost-3456": {
+        "baseUrl": "http://localhost:3456/v1",
+        "apiKey": "not-needed",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "claude-sonnet-4",
+            "name": "claude-sonnet-4 (Custom Provider)",
+            "reasoning": false,
+            "input": ["text"],
+            "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+            "contextWindow": 200000,
+            "maxTokens": 16000
+          }
+        ]
+      }
+    }
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "botToken": "YOUR_BOT_TOKEN_HERE"
+    }
+  },
+  "plugins": {
+    "load": {
+      "paths": ["~/.openclaw/workspace/plugins/memory-lancedb-pro"]
+    },
+    "slots": { "memory": "memory-lancedb-pro" },
+    "entries": {
+      "memory-lancedb-pro": {
+        "enabled": true,
+        "config": {
+          "embedding": {
+            "provider": "openai-compatible",
+            "apiKey": "YOUR_JINA_API_KEY_HERE",
+            "baseURL": "https://api.jina.ai/v1",
+            "model": "jina-embeddings-v3",
+            "dimensions": 1024,
+            "taskQuery": "retrieval.query",
+            "taskPassage": "retrieval.passage",
+            "normalized": true
+          },
+          "autoCapture": true,
+          "autoRecall": true,
+          "enableManagementTools": true,
+          "retrieval": {
+            "mode": "hybrid",
+            "rerank": "cross-encoder",
+            "rerankApiKey": "YOUR_JINA_API_KEY_HERE",
+            "rerankModel": "jina-reranker-v2-base-multilingual",
+            "rerankProvider": "jina"
+          }
+        }
+      }
+    }
+  }
+}

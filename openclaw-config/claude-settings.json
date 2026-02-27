@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)"
+    ]
+  },
+  "enabledPlugins": {
+    "swift-lsp@claude-plugins-official": true
+  },
+  "hooks": {
+    "Stop": [{"hooks": [{"type": "command", "command": "/Users/blueice/.claude/hooks/notify-agi.sh", "timeout": 30}]}],
+    "SessionEnd": [{"hooks": [{"type": "command", "command": "/Users/blueice/.claude/hooks/notify-agi.sh", "timeout": 30}]}]
+  }
+}

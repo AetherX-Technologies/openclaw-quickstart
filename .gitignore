@@ -10,5 +10,6 @@ credentials.json
 *.pem
 secrets/
 
-# Real openclaw config (contains bot token) — commit only the placeholder version
+# Real openclaw config (contains secrets) — commit only the example/placeholder version
 openclaw-config/openclaw.json.local
+openclaw-config/openclaw.json

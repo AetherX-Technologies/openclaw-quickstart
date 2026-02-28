@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>ai.openclaw.gateway.watchdog</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>/Users/blueice/.local/bin/openclaw-watchdog.sh</string>
+  </array>
+
+  <key>StartInterval</key>
+  <integer>60</integer>
+
+  <key>RunAtLoad</key>
+  <false/>
+
+  <key>StandardOutPath</key>
+  <string>/Users/blueice/.openclaw/logs/watchdog.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/Users/blueice/.openclaw/logs/watchdog.log</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/Users/blueice/.nvm/versions/node/v24.12.0/bin:/Users/blueice/.local/bin:/usr/local/bin:/usr/bin:/bin</string>
+    <key>HOME</key>
+    <string>/Users/blueice</string>
+    <key>OPENCLAW_GATEWAY_PORT</key>
+    <string>18789</string>
+  </dict>
+</dict>
+</plist>

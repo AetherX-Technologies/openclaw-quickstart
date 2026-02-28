@@ -5,7 +5,7 @@
 echo "Starting claude-max-api proxy on :3456..."
 pkill -f claude-max-api 2>/dev/null
 sleep 1
-nohup env -u CLAUDECODE claude-max-api > ~/claude-proxy.log 2>&1 &
+nohup env -u CLAUDECODE PATH="/Users/blueice/.local/bin:$PATH" claude-max-api > ~/claude-proxy.log 2>&1 &
 echo "  PID $! — logs: ~/claude-proxy.log"
 
 # Wait for proxy to be ready

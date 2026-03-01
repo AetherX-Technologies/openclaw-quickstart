@@ -27,10 +27,12 @@ File: dist/reply-D-ejYZny.js
 Change: addCandidate(resolved.ref, true) → addCandidate(resolved.ref, false)
         in resolveFallbackCandidates loop
 
-## patch-4: Remove --color flag from codex resumeArgs (reply-D-ejYZny.js)
+## patch-4: Fix codex resumeArgs incompatible flags (reply-D-ejYZny.js)
 
-`codex exec resume` does not accept `--color` argument (unlike `codex exec`),
-causing all resume-session fallbacks to fail with "unexpected argument '--color'".
+`codex exec resume` only accepts a subset of flags compared to `codex exec`.
+Remove `--color never` and replace `--sandbox read-only` with
+`--dangerously-bypass-approvals-and-sandbox` to match the resume subcommand's interface.
 
 File: dist/reply-D-ejYZny.js
-Change: Remove `"--color", "never"` from DEFAULT_CODEX_BACKEND.resumeArgs
+Change: In DEFAULT_CODEX_BACKEND.resumeArgs, remove `"--color", "never"` and
+        replace `"--sandbox", "read-only"` with `"--dangerously-bypass-approvals-and-sandbox"`
